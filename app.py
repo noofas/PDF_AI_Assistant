@@ -8,6 +8,7 @@ uploaded_file = st.file_uploader(
     type=["pdf"]
 )
 
+
 if uploaded_file is not None:
 
     st.success(f"File selected: {uploaded_file.name}")
