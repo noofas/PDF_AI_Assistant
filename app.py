@@ -92,7 +92,7 @@ question = st.text_input(
 
 if st.button("Ask AI"):
 
-    question_webhook_url = "https://noofas.app.n8n.cloud/webhook-test/pdf-question"
+    question_webhook_url = "PUT_QUESTION_WEBHOOK_URL_HERE"
 
     files = {
         "file": (
@@ -106,15 +106,29 @@ if st.button("Ask AI"):
         "question": question
     }
 
-    response = requests.post(
-        question_webhook_url,
-        files=files,
-        data=data
-    )
+    with st.spinner("Thinking..."):
 
-    st.write("Status Code:", response.status_code)
+        response = requests.post(
+            question_webhook_url,
+            files=files,
+            data=data
+        )
 
-    try:
-        st.json(response.json())
-    except:
-        st.write(response.text)
+        if response.status_code == 200:
+
+            result = response.json()
+
+            st.success("Answer generated successfully.")
+
+            st.subheader("🤖 Answer")
+
+            st.write(result["answer"])
+
+        else:
+
+            st.error(
+                f"Request failed with status code: "
+                f"{response.status_code}"
+            )
+
+            st.write(response.text)
